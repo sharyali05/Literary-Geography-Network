@@ -74,7 +74,7 @@ Specifically: Did a small number of dominant cities act as gravitational hubs pu
 ## Repository Structure
 
 ```
-├── notebook.ipynb                  # Full analysis notebook
+├── mini_proj2.ipynb                  # Full analysis notebook
 ├── index.html                      # Project web presentation
 ├── README.md
 ```
