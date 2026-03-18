@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Literary Geography Network — Cultural Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink: #1a1208;
+      --paper: #f7f2e8;
+      --aged: #e8e0cc;
+      --rust: #a0421d;
+      --gold: #c9922a;
+      --pale-rust: #f0e0d0;
+      --pale-gold: #f5edda;
+      --muted: #6b5f4a;
+      --border: #c8b99a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 17px;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* ── MASTHEAD ── */
+    .masthead {
+      border-bottom: 3px double var(--border);
+      padding: 0.4rem 0 0.3rem;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4rem 2rem 2.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.08;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--rust);
+    }
+
+    .hero-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--muted);
+      margin-bottom: 2.2rem;
+    }
+
+    .hero-rule {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 0 auto 2rem;
+      max-width: 420px;
+    }
+    .hero-rule::before, .hero-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .hero-rule span {
+      font-size: 1.1rem;
+      color: var(--gold);
+    }
+
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .colab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.8rem;
+      padding: 0.6rem 1.4rem;
+      background: var(--rust);
+      color: white;
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .colab-btn:hover { background: #7d3216; transform: translateY(-1px); }
+    .colab-btn svg { width: 16px; height: 16px; }
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      max-width: 860px;
+      margin: 3.5rem auto 0;
+      padding: 0 2rem;
+    }
+    .section-divider::before, .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-divider span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── MAIN CONTENT ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    section {
+      margin-top: 3rem;
+    }
+
+    section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 1rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--aged);
+    }
+
+    section h2 .section-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--rust);
+      letter-spacing: 0.1em;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    section p {
+      margin-bottom: 1rem;
+      color: #2a2010;
+    }
+
+    /* ── PULL QUOTE ── */
+    .pull-quote {
+      border-left: 4px solid var(--rust);
+      background: var(--pale-rust);
+      margin: 2rem 0;
+      padding: 1.2rem 1.6rem;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--ink);
+    }
+    .pull-quote cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.78rem;
+      font-style: normal;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+
+    /* ── HYPOTHESES CARDS ── */
+    .hypothesis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 600px) { .hypothesis-grid { grid-template-columns: 1fr; } }
+
+    .hypothesis-card {
+      border: 1px solid var(--border);
+      padding: 1.3rem 1.4rem;
+      background: var(--pale-gold);
+      position: relative;
+    }
+    .hypothesis-card::before {
+      content: attr(data-label);
+      position: absolute;
+      top: -0.6rem;
+      left: 1rem;
+      background: var(--paper);
+      padding: 0 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--rust);
+    }
+    .hypothesis-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .hypothesis-card p {
+      font-size: 0.9rem;
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    /* ── METRICS TABLE ── */
+    .metrics-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.88rem;
+    }
+    .metrics-table th {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 0.55rem 0.9rem;
+      text-align: left;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .metrics-table td {
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid var(--aged);
+      vertical-align: top;
+    }
+    .metrics-table tr:nth-child(even) td { background: var(--pale-gold); }
+    .metrics-table td:first-child {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--rust);
+    }
+
+    /* ── VISUALIZATION GALLERY ── */
+    .viz-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 640px) { .viz-grid { grid-template-columns: 1fr; } }
+
+    .viz-card {
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: var(--aged);
+    }
+    .viz-card-label {
+      padding: 0.55rem 0.85rem;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .viz-card-body {
+      padding: 1rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .viz-placeholder {
+      height: 160px;
+      background: linear-gradient(135deg, var(--aged) 0%, var(--pale-gold) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .viz-card img {
+      width: 100%;
+      display: block;
+    }
+
+    /* ── LIMITATIONS / FURTHER STUDY LISTS ── */
+    .styled-list {
+      list-style: none;
+      margin: 1rem 0;
+      padding: 0;
+    }
+    .styled-list li {
+      padding: 0.55rem 0 0.55rem 1.8rem;
+      border-bottom: 1px solid var(--aged);
+      position: relative;
+      font-size: 0.93rem;
+      color: #2a2010;
+    }
+    .styled-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--rust);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 3px double var(--border);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero > * {
+      animation: fadeUp 0.7s ease both;
+    }
+    .hero > *:nth-child(1) { animation-delay: 0.05s; }
+    .hero > *:nth-child(2) { animation-delay: 0.15s; }
+    .hero > *:nth-child(3) { animation-delay: 0.22s; }
+    .hero > *:nth-child(4) { animation-delay: 0.28s; }
+    .hero > *:nth-child(5) { animation-delay: 0.34s; }
+    .hero > *:nth-child(6) { animation-delay: 0.40s; }
+    .hero > *:nth-child(7) { animation-delay: 0.46s; }
+  </style>
+</head>
+<body>
+
+  <div class="masthead">Cultural Analytics — Mini Project #2 &nbsp;·&nbsp; Network Analysis &nbsp;·&nbsp; 19th-Century Europe</div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-eyebrow">Literary Geography Network</p>
+    <h1>The Geography of <em>Literary Production</em> in 19th-Century Europe</h1>
+    <p class="hero-subtitle">A bipartite author–city network analysis of how urban space shaped literary movements</p>
+    <div class="hero-rule"><span>✦</span></div>
+    <div class="hero-meta">
+      <span>Dataset · Wikidata SPARQL</span>
+      <span>Method · Network Analysis</span>
+      <span>Tools · NetworkX · Folium · PyVis</span>
+    </div>
+    <a class="colab-btn" href="notebook.ipynb" target="_blank">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Open Notebook
+    </a>
+  </div>
+
+  <!-- MOTIVATION -->
+  <div class="section-divider"><span>01 — Motivation</span></div>
+  <main>
+    <section>
+      <h2>Motivation</h2>
+
+      <div class="pull-quote">
+        "Geography is not the inert container of historical events — it is one of the forces that shapes them."
+        <cite>— Franco Moretti, Atlas of the European Novel (1998)</cite>
+      </div>
+
+      <p>The 19th century sits at a profound tension point in European literary history. On one hand, print culture and publishing were becoming increasingly centralized in a handful of major cities — Paris, London, Leipzig. On the other hand, nationalist literary movements were actively constructing distinct regional and national voices, from Russian Realism to Scandinavian Naturalism to the Italian Risorgimento.</p>
+
+      <p>This project builds a network to arbitrate between two competing hypotheses about how geography related to literary production:</p>
+
+      <div class="hypothesis-grid">
+        <div class="hypothesis-card" data-label="Hypothesis A">
+          <h3>The Hub Hypothesis</h3>
+          <p>A small number of dominant cities acted as gravitational centers. Literary influence flowed outward from Paris, London, and Berlin. Authors had to pass through these hubs to gain legitimacy.</p>
+        </div>
+        <div class="hypothesis-card" data-label="Hypothesis B">
+          <h3>The Cluster Hypothesis</h3>
+          <p>Distinct regional literary scenes developed in relative isolation. Geography reinforced movement boundaries rather than dissolving them, producing tight local clusters with weak inter-regional ties.</p>
+        </div>
+      </div>
+
+      <p>The theoretical grounding comes from Moretti's argument that geography is constitutive of literature, and Casanova's claim in <em>The World Republic of Letters</em> (1999) that Paris functioned as the dominant "meridian" of literary prestige — a claim this network can empirically test.</p>
+    </section>
+
+    <!-- DATASET -->
+    <div class="section-divider"><span>02 — Dataset</span></div>
+    <section>
+      <h2>Dataset</h2>
+      <p>The dataset is constructed by querying the <strong>Wikidata SPARQL endpoint</strong> for European authors born between 1760 and 1880, collecting birth cities, residence cities, literary movement affiliations, and geographic coordinates. This yields a bipartite graph connecting authors to the cities they inhabited.</p>
+
+      <table class="metrics-table">
+        <thead>
+          <tr><th>Field</th><th>Description</th><th>Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>author_id</td><td>Wikidata entity ID (e.g., Q9717)</td><td>Wikidata</td></tr>
+          <tr><td>author_name</td><td>English-language label</td><td>Wikidata</td></tr>
+          <tr><td>birth_year</td><td>Year of birth (1760–1880)</td><td>Wikidata P569</td></tr>
+          <tr><td>movement</td><td>Literary movement or school</td><td>Wikidata P135</td></tr>
+          <tr><td>country</td><td>Country of citizenship</td><td>Wikidata P27</td></tr>
+          <tr><td>city</td><td>Birth or residence city name</td><td>Wikidata P19 / P551</td></tr>
+          <tr><td>lat / lon</td><td>Geographic coordinates</td><td>Wikidata P625</td></tr>
+          <tr><td>connection_type</td><td>birth (weight 1.5) or residence (weight 1.0)</td><td>Derived</td></tr>
+        </tbody>
+      </table>
+
+      <p>Coverage spans 19 European countries including France, Britain, Germany, Russia, Italy, Spain, Austria, and Scandinavia. A curated fallback dataset of ~50 canonical authors is included for cases where the Wikidata API is unavailable.</p>
+    </section>
+
+    <!-- APPROACH -->
+    <div class="section-divider"><span>03 — Approach</span></div>
+    <section>
+      <h2>Approach &amp; Network Metrics</h2>
+
+      <p>The analysis proceeds in three stages: constructing the bipartite network, projecting it into two unipartite networks, and computing metrics and communities on each.</p>
+
+      <table class="metrics-table">
+        <thead>
+          <tr><th>Metric</th><th>Applied to</th><th>What it tells us</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Degree Centrality</td>
+            <td>City network</td>
+            <td>Which cities attracted the most authors? Identifies gravitational hubs.</td>
+          </tr>
+          <tr>
+            <td>Betweenness Centrality</td>
+            <td>City + Author networks</td>
+            <td>Which nodes act as bridges between otherwise disconnected literary regions? Often more surprising than degree.</td>
+          </tr>
+          <tr>
+            <td>Closeness Centrality</td>
+            <td>City network</td>
+            <td>Which cities could most efficiently "reach" the rest of the literary world?</td>
+          </tr>
+          <tr>
+            <td>Louvain Community Detection</td>
+            <td>Both networks</td>
+            <td>Do communities map onto geographic regions, national traditions, or literary movements?</td>
+          </tr>
+          <tr>
+            <td>Modularity Score</td>
+            <td>Both networks</td>
+            <td>How strongly does the network partition into distinct communities? Higher = stronger geographic clustering.</td>
+          </tr>
+          <tr>
+            <td>Attribute Assortativity</td>
+            <td>Author network</td>
+            <td>Do same-movement authors share cities? Tests whether geography reinforced or cut across movement identity.</td>
+          </tr>
+          <tr>
+            <td>Epoch Subgraphs</td>
+            <td>City network</td>
+            <td>Comparing 1760–1829 vs. 1830–1889 reveals whether the geographic center of literary production shifted over the century.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>The bipartite design is a deliberate methodological choice: rather than claiming authors "interacted" (which would require direct evidence), we connect them through shared cities — a verifiable, well-documented relationship. Edge weights distinguish birth cities (1.5) from residence cities (1.0), reflecting the stronger claim of long-term habitation.</p>
+    </section>
+
+    <!-- VISUALIZATIONS -->
+    <div class="section-divider"><span>04 — Visualizations</span></div>
+    <section>
+      <h2>Visualizations</h2>
+      <p>Four targeted visualizations are produced to avoid the "hairball" problem of over-dense network plots. Each filters or abstracts the full network to highlight a specific analytical question.</p>
+
+      <div class="viz-grid">
+        <div class="viz-card">
+          <div class="viz-card-label">Fig. 1 — City Network</div>
+          <div class="viz-placeholder">city_network.png</div>
+          <div class="viz-card-body">Force-directed layout. Node size = degree centrality. Color = Louvain community. Edge weight = shared authors.</div>
+        </div>
+        <div class="viz-card">
+          <div class="viz-card-label">Fig. 2 — Author Network</div>
+          <div class="viz-placeholder">author_network.png</div>
+          <div class="viz-card-body">Filtered to top 40% by betweenness — the "geographic bridges." Node color = literary movement.</div>
+        </div>
+        <div class="viz-card">
+          <div class="viz-card-label">Fig. 3 — Temporal Comparison</div>
+          <div class="viz-placeholder">temporal_comparison.png</div>
+          <div class="viz-card-body">Side-by-side city networks for 1760–1829 and 1830–1889. Did the geographic center of literary production shift?</div>
+        </div>
+        <div class="viz-card">
+          <div class="viz-card-label">Fig. 4 — Centrality Charts</div>
+          <div class="viz-placeholder">centrality_comparison.png</div>
+          <div class="viz-card-body">Bar charts comparing top cities by degree vs. betweenness centrality — revealing "bridge" cities vs. pure hubs.</div>
+        </div>
+      </div>
+
+      <p>Two interactive visualizations are also produced: a <strong>Folium geographic map</strong> overlaying author density and city-city connections on a real map of Europe, and a <strong>PyVis interactive author network</strong> with hover tooltips showing author name, movement, and betweenness score.</p>
+    </section>
+
+    <!-- DISCUSSION -->
+    <div class="section-divider"><span>05 — Discussion</span></div>
+    <section>
+      <h2>Discussion</h2>
+
+      <div class="pull-quote">
+        The network does not merely illustrate what historians already know — it surfaces the structural logic beneath the literary map of 19th-century Europe.
+      </div>
+
+      <p>The degree centrality results reveal which cities truly dominated as attractors of literary talent. The more analytically interesting finding comes from betweenness centrality: certain mid-sized cities score disproportionately high because they connect otherwise separate literary regions — cities like Geneva or Brussels, sitting at the intersection of French and German literary worlds, may outperform larger capitals as structural bridges.</p>
+
+      <p>The Louvain community structure tests the core hypothesis: if communities map onto geographic regions rather than literary movements, geography was the stronger organizing principle. If communities cut across geography and align with movements (Romanticism spanning France, Germany, and Britain as one cluster), then shared aesthetics mattered more than place.</p>
+
+      <p>The movement assortativity coefficient directly measures whether same-movement authors co-located. A positive value supports Moretti's geographic determinism; a negative value would suggest that literary movements were inherently cosmopolitan — that Realism, for instance, was something authors encountered in Paris regardless of where they came from.</p>
+
+      <p><em>Fill in the specific findings after running the notebook.</em></p>
+    </section>
+
+    <!-- LIMITATIONS -->
+    <div class="section-divider"><span>06 — Limitations</span></div>
+    <section>
+      <h2>Limitations</h2>
+      <ul class="styled-list">
+        <li><strong>Coverage bias</strong>: Wikidata's documentation is uneven; French and British authors are over-represented, while Eastern European and Iberian authors are systematically undercounted, which may artificially inflate the centrality of Paris and London.</li>
+        <li><strong>Temporal conflation</strong>: The bipartite projection merges authors across the entire century. An author resident in Paris in 1810 and one resident there in 1890 appear structurally equivalent, despite no possibility of overlap.</li>
+        <li><strong>Definitional inconsistency</strong>: "City of residence" in Wikidata conflates brief visits, years-long stays, and permanent settlements without distinction.</li>
+        <li><strong>Projection information loss</strong>: Moving from the bipartite network to unipartite projections discards directionality, timing, and individual connection strength.</li>
+        <li><strong>Proximity ≠ influence</strong>: Geographic co-presence is not evidence of intellectual relationship, correspondence, or mutual influence. The network captures structural proximity, not documented interaction.</li>
+      </ul>
+    </section>
+
+    <!-- FURTHER STUDY -->
+    <div class="section-divider"><span>07 — Further Study</span></div>
+    <section>
+      <h2>Further Study</h2>
+      <ul class="styled-list">
+        <li><strong>Correspondence networks</strong>: Enrich with digitized author letters from the <a href="http://emlo.bodleian.ox.ac.uk/" target="_blank">EMLO database</a> to build a direct social network on top of the geographic one — transforming proximity evidence into relationship evidence.</li>
+        <li><strong>Dynamic network analysis</strong>: Replace two coarse epoch slices with decade-level or year-level snapshots to track the emergence and decline of individual cities as literary hubs in near-real-time.</li>
+        <li><strong>Global expansion</strong>: Extend the dataset beyond Europe to test whether the hub structure (and Paris's dominance in particular) was a specifically European phenomenon or part of a global literary system.</li>
+        <li><strong>Stylometric layer</strong>: Use NLP on Project Gutenberg texts to test whether geographic proximity correlates with measurable stylistic similarity — connecting the network analysis to the texts themselves.</li>
+        <li><strong>Publisher networks</strong>: Add publisher location as a third node type to the bipartite graph, testing whether the geography of publishing mirrors or diverges from the geography of authorship.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    Cultural Analytics — Mini Project #2 &nbsp;·&nbsp; Network Analysis &nbsp;·&nbsp; Dataset: Wikidata &nbsp;·&nbsp; Tools: NetworkX, Folium, PyVis, Python-Louvain
+  </footer>
+
+</body>
+</html>
