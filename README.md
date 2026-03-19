@@ -4,7 +4,7 @@
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sharyali05/Literary-Geography-Network/blob/main/mini_proj2.ipynb)
 
-As a student interested in the intersection of literature and space, I have always been curious about whether the cities European authors inhabited shaped the literary movements they belonged to. Through this network analysis, I build a **bipartite author–city network** from Wikidata, project it into city and author unipartite networks, and apply **Louvain community detection**, **degree and betweenness centrality**, and **temporal slicing** to understand how geography structured literary production across the 19th century.
+As a student interested in the intersection of literature and geography, I have always been curious about whether the cities European authors inhabited shaped the literary movements they belonged to. Through this network analysis, I build a **bipartite author–city network** from Wikidata, project it into city and author unipartite networks, and apply **Louvain community detection**, **degree and betweenness centrality**, and **temporal slicing** to understand how geography structured literary production across the 19th century.
 
 ---
 
